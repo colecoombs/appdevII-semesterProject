@@ -7,6 +7,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 
 import HomeScreen from './screens/HomeScreen';
 import Location from './screens/Location';
+import Journal from './screens/Journal';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -20,10 +21,13 @@ const App =() => {
                 let iconName;
                 if (route.name ==='Home') {
                   iconName = focused 
-                    ? 'ios-home'
-                    : 'ios-home';
+                    ? 'home'
+                    : 'home-outline';
                 } else if (route.name==='Location') {
-                  iconName = focused ? 'ios-list' : 'ios-list';
+                  iconName = focused ? 'list' : 'list-outline';
+                }
+                else if (route.name==='Journal') {
+                  iconName = focused ? 'journal' : 'journal-outline';
                 }
                 return <Ionicons name={iconName} size={size} color={color} />
               },
@@ -51,6 +55,19 @@ const App =() => {
               component={Location}
               options={ {
                 title: 'Locations',
+                headerStyle: {
+                  backgroundColor: '#6200EE',
+                },
+                headerTitleStyle: {
+                  color: '#fff',
+                },
+              }} 
+            />
+            <Tab.Screen 
+              name ='Journal'
+              component={Journal}
+              options={ {
+                title: 'Journal',
                 headerStyle: {
                   backgroundColor: '#6200EE',
                 },
