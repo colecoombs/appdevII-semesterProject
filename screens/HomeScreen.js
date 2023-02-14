@@ -13,66 +13,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Images from '../components/WeatherImage';
-import Temp from '../components/WeatherTemp';
-import Precip from '../components/Precip';
+import {Images, Temp, Precip} from '../components/Weather';
+import { getWeatherImage } from '../components/Weather';
+import { GetWeather } from '../components/Weather';
 
+// Function to configure the homepage of the app
 function HomeScreen() {
   return (
-    <View style={styles.container}>
-      <View>
-          <Text style={styles.city}>Springfield, MO</Text>
-      </View>
-      <View style={styles.row}>
-          <View style={styles.row}>
-            <Images></Images>
-          </View>
-          <View style={styles.row}>
-            <View style={styles.colTop}> 
-              <Temp></Temp>
-            </View>
-          </View>
-      </View>
-      <View style={styles.col}>
-        <Precip></Precip>
-      </View>
-      <View style={styles.container}>
-        <View style={styles.row}>
-            <View style={styles.col}>
-                <Text style={styles.futureCast}>Sun 15</Text>
-                <MaterialCommunityIcons name="weather-windy" size={40} color="black"/>
-                <Text style={styles.futureCast}>54</Text>
-                <Text style={styles.futureCast}>48</Text>
-                <Text style={styles.futureCast}>41%</Text>
-            </View>
-            <View style={styles.col}>
-                <Text style={styles.futureCast}>Mon 16</Text>
-                <MaterialCommunityIcons name="weather-partly-cloudy" size={40} color="black" />
-                <Text style={styles.futureCast}>63</Text>
-                <Text style={styles.futureCast}>35</Text>
-                <Text style={styles.futureCast}>43%</Text>
-            </View>
-            <View style={styles.col}>
-                <Text style={styles.futureCast}>Tue 17</Text>
-                <MaterialCommunityIcons name="weather-pouring" size={40} color="black" />
-                <Text style={styles.futureCast}>54</Text>
-                <Text style={styles.futureCast}>40</Text>
-                <Text style={styles.futureCast}>43%</Text>
-            </View>
-            <View style={styles.col}>
-                <View style={styles.normalText}>
-                  <Text style={styles.futureCast}>Wed 18</Text>
-                  <MaterialCommunityIcons name="weather-pouring" size={40} color="black" />
-                  <Text style={styles.futureCast}>52</Text>
-                  <Text style={styles.futureCast}>35</Text>
-                  <Text style={styles.futureCast}>80%</Text>
-                </View>
-            </View>
-        </View>
-      </View>
-    </View>
-    
-
+    <GetWeather></GetWeather>
   )
 }
 const styles = StyleSheet.create({
