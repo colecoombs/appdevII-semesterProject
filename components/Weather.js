@@ -15,6 +15,8 @@
       02/14/2023 - Changed the previously hard coded weather values and date for the current
         weather to update with the correct information from the API call
   
+  TO DO:
+      Find out how to get the State name from the API call to go with the city name.        
  */
 
 import React, {useEffect, useState} from 'react';
