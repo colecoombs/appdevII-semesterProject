@@ -50,12 +50,13 @@ export function GetWeather() {
                 city: res.data.name,
                 state: '',
                 humidity: res.data.main.humidity,
-                weatherCode: res.data.weather[0].main,
+                weatherCode: res.data.weather.main,
               });
               console.log(JSON.stringify(res.data));
               console.log(res.data.dt);
               console.log(JSON.stringify(weather));
-              console.log(weather.weatherCode);
+              console.log('Weather code: ', weather.weatherCode);
+              console.log('Weather ID: ', weather.id);
         })
         .catch(err=> {
             console.log(err);
@@ -130,18 +131,6 @@ export function GetWeather() {
     )
 }
 
-
-
-/* // Prop function to set the image for the app
-export function Images(props) {
-  return (
-    <Image id='image'
-    source={getWeatherImage()}
-    style={styles.resize}
-    />
-  )
-} */
-
 // Function used to determine what weather image to show
 function getWeatherImage(weatherCode, weatherId, wind) {
     if ((weatherCode === 'Clouds' || weatherCode === 'Clear') && (wind > 35)) {
@@ -169,25 +158,6 @@ function getWeatherImage(weatherCode, weatherId, wind) {
       return require('../assets/mist.png');
     }
 }
-
-/* // Prop function to get the precipitation, high, low, and wind information
-// and set it accordingly
-export function Precip(props) {
-  return (
-    <><Text style={styles.normalText}>Chance of precipitation: 3%</Text>
-    <Text style={styles.normalText}>High: 48°   Low: 28°    Wind: 7mph</Text></>
-  )
-}
-
-// Prop function to get the date, current temperature and what it feels like temp
-// and set it accordingly 
-export function Temp(props) {
-  return (
-    <><Text style={styles.normalText}>Jan 14, 2023</Text>
-    <Text style={styles.boldText}>45° F</Text>
-    <Text style={styles.normalText}>Feels like 45° F</Text></>
-  )
-} */
 
 // Different stylesheets
 const styles = StyleSheet.create({

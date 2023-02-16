@@ -9,6 +9,8 @@ import HomeScreen from './screens/HomeScreen';
 import Location from './screens/Location';
 import Journal from './screens/Journal';
 
+const curLocation = {zip: '65802', city: 'Springfield'};
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -53,6 +55,7 @@ const App =() => {
             <Tab.Screen 
               name ='Location'
               component={Location}
+              initialParams={curLocation}
               options={ {
                 title: 'Locations',
                 headerStyle: {

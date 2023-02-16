@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-function Location() {
+function Location(route, navigation) {
+  const {zip, city} = route.params
   return (
     <View style={styles.container}>
         <Text>Location Screen</Text>
