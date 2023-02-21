@@ -65,9 +65,9 @@ export function GetWeather() {
     if (weather.reqDT!==1)
     return (
       <View style={styles.container}>
-      <View>
+        <View>
           <Text style={styles.city}>{weather.city}, {weather.state}</Text>
-      </View>
+        </View>
       <View style={styles.row}>
           <View style={styles.row}>
             <Image id='image'
