@@ -1,0 +1,21 @@
+{
+  "name": "semester-project-myweatherapp-colecoombs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "db.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DUCS-APPDEVII/semester-project-myweatherapp-colecoombs.git"
+  },
+  "author": "C. Coombs",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DUCS-APPDEVII/semester-project-myweatherapp-colecoombs/issues"
+  },
+  "homepage": "https://github.com/DUCS-APPDEVII/semester-project-myweatherapp-colecoombs#readme"
+}
