@@ -12,7 +12,7 @@ const app = express();
 
 const router = express.Router();
 
-router.use('/api', require('./api/users'));
+router.use('/api/user', require('./api/users'));
 
 app.use(router);
 

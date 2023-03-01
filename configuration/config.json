@@ -1,0 +1,6 @@
+{
+    "host": "localhost",
+    "user": "weatherdev",
+    "password": "Letmein1!",
+    "database": "weather"
+}

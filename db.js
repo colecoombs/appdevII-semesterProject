@@ -5,12 +5,13 @@
 //Modification Log
 
 const mysql = require("mysql");
+const config = require("./configuration/config.json");
 
 const conn = mysql.createConnection({
-    host: "localhost",
-    user: "weather-dev",
-    password: "Letmein1!",
-    database: "weather"
+    host: config.host,
+    user: config.user,
+    password: config.password,
+    database: config.database
 });
 
 module.exports = conn;
