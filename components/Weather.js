@@ -25,12 +25,13 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-
+// The api call to the OpenWeather website to get the current weather
 export function GetWeather() {
     const apiKey = 'd95207455d6fbc8aa3659b659f721c47';
     const [weather, setWeather] = useState({reqDT: 1, description: '', temp: 0});
     const [zip, setZip] = useState('65802');
 
+    // Url for the website
     const url = `https://api.openweathermap.org/data/2.5/weather?zip=${zip},us&appid=${apiKey}&units=imperial`;
     console.log(url);
 
@@ -38,6 +39,7 @@ export function GetWeather() {
         axios
         .get(url)
         .then(res => {
+            // Different fields used to display the current conditions
             setWeather({ ...weather,
                 reqDT: dayjs(new Date(res.data.dt * 1000)).format('ddd, MMM D'),
                 description: res.data.weather[0].description,
@@ -50,7 +52,7 @@ export function GetWeather() {
                 city: res.data.name,
                 state: '',
                 humidity: res.data.main.humidity,
-                weatherCode: res.data.weather.main,
+                weatherCode: res.data.weather[0].main,
               });
               console.log(JSON.stringify(res.data));
               console.log(res.data.dt);
@@ -142,7 +144,7 @@ function getWeatherImage(weatherCode, weatherId, wind) {
     else if (weatherId === 801 || weatherId === 802) {
       return require('../assets/partlyCloudy.jpg');
     } 
-    else if (weatherCode === 'Rain' || weatherCode === 'Drizzle') {
+    else if (weatherCode === 'Rain' || weatherCode === 'Drizzle' || weatherCode === 'light rain') {
       return require('../assets/rain.png');
     }
     else if (weatherCode === 'Snow') {
