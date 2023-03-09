@@ -62,8 +62,6 @@ router.post('/auth', (req, res) => {
     console.log(`User: ${req.body.email} password: ${req.body.password}`);
     conn.query(qry, [req.body.email], (err, rows) => {
 
-        let hash = bcrypt.hashSync(req.body.password, 10);
-
         // Server error
         if (err) {
             res.status(500).json({msg: 'Server error'});
@@ -75,7 +73,7 @@ router.post('/auth', (req, res) => {
             let user = rows[0];
             let password = user.password;
 
-            if (bcrypt.compareSync(password, hash)) {
+            if (bcrypt.compareSync(req.body.password, password)) {
                 const token = jwt.encode({username: user.email}, secret);
                 console.log(token);
                 res.status(200).json({token: token, msg: 'Successful'});
