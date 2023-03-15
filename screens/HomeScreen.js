@@ -5,24 +5,102 @@
   
   This file is used to make the home screen of the weather app. It will display current
   and future forecasts for the next 4 days.
+
+  API reference: https://openweathermap.org/data/2.5/weather
+  Key: d95207455d6fbc8aa3659b659f721c47
   
   Modifications:
+      02/10/2023 - Added the API to fetch the current weather conditions
+      02/14/2023 - Changed the previously hard coded weather values and date for the current
+        weather to update with the correct information from the API call
+      03/15/2023: Modified heavily, created separate components for each section of the 
+        Home Screen. Moved the axios call to the home screen for this purpose.
 
  */
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import {Images, Temp, Precip} from '../components/Weather';
-import { getWeatherImage } from '../components/Weather';
-import { GetWeather } from '../components/Weather';
+import axios from 'axios';
+import dayjs from 'dayjs';
+import GetCity from '../components/GetCity';
+import GetImage from '../components/GetImage';
+import FutureForecast from '../components/FutureForecast';
+import MiddleWeather from '../components/MiddleWeather';
+import GetCurrentWeather from '../components/Weather';
 
-// Function to configure the homepage of the app
+
 function HomeScreen() {
+  const apiKey = 'd95207455d6fbc8aa3659b659f721c47';
+  const [weather, setWeather] = useState({reqDT: 1, description: '', temp: 0});
+  const [zip, setZip] = useState('65802');
+
+  // Url for the website
+  const url = `https://api.openweathermap.org/data/2.5/weather?zip=${zip},us&appid=${apiKey}&units=imperial`;
+  console.log(url);
+
+  useEffect(() => {
+      axios
+      .get(url)
+      .then(res => {
+          // Different fields used to display the current conditions
+          setWeather({ ...weather,
+              reqDT: dayjs(new Date(res.data.dt * 1000)).format('ddd, MMM D'),
+              description: res.data.weather[0].description,
+              temp: res.data.main.temp,
+              id: res.data.weather[0].id,
+              feels: res.data.main.feels_like,
+              min: res.data.main.temp_min,
+              max: res.data.main.temp_max,
+              wind: res.data.wind.speed,
+              city: res.data.name,
+              state: '',
+              humidity: res.data.main.humidity,
+              weatherCode: res.data.weather[0].main,
+            });
+            console.log(JSON.stringify(res.data));
+            console.log(res.data.dt);
+            console.log(JSON.stringify(weather));
+            console.log('Weather code: ', weather.weatherCode);
+            console.log('Weather ID: ', weather.id);
+      })
+      .catch(err=> {
+          console.log(err);
+      })
+  },[zip])
+  if (weather.reqDT!==1)
   return (
-    <GetWeather></GetWeather>
-  )
+    <View style={styles.container}>
+        <View>
+          <GetCity city = {weather.city} zip = {zip} />
+        </View>
+      <View style={styles.row}>
+          <View style={styles.row}>
+            <GetImage weatherCode = {weather.weatherCode} id = {weather.id} wind = {weather.wind} />
+          </View>
+        <View style={styles.row}>
+            <GetCurrentWeather temp = {weather.temp} date = {weather.reqDT} feels = {weather.feels} />
+        </View>
+      </View>
+        <MiddleWeather humidity={weather.humidity} max={weather.max} min={weather.min} wind={weather.wind} />
+      <View style={styles.container}>
+        <View style={styles.row}>
+            <FutureForecast date='Sun 15' imageName='weather-windy' high='54' low='48' chance='41%' />
+            <FutureForecast date='Mon 16' imageName='weather-partly-cloudy' high='63' low='35' chance='43%' />
+            <FutureForecast date='Tue 17' imageName='weather-pouring' high='54' low='40' chance='43%' />
+            <FutureForecast date='Wed 18' imageName='weather-pouring' high='52' low='35' chance='80%' />
+        </View>
+      </View>
+    </View>
+    )
+    else
+    return (
+      <View>
+          <Text>Loading ...</Text>
+      </View>
+    )
 }
+
+
 const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -56,6 +134,13 @@ const styles = StyleSheet.create({
       paddingRight: 60,
       justifyContent: 'center',
     },
+
+    resize: {
+      width: 240,
+      height: 160,
+      resizeMode: 'contain'
+    },
+
     col: {
       flex: 1,
       flexDirection: 'column',
