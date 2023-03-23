@@ -1,61 +1,19 @@
-// Author: C. Coombs    Date: 02/28/2023
-//
-// Api route for users
-//
-// Modification Log
+/*  File: users.js
+    Author: C. Coombs    
+    Date: 02/28/2023
+
+     Api route for users
+
+     Modification Log: 
+        03/20/2023: Added route to create user
+*/
 
 const bcrypt = require('bcrypt');
 const jwt = require("jwt-simple");
-
-
 const router = require("express").Router();
 const conn = require("../db");
+const config = require("../configuration/config.json");
 
-const secret = "supersecret";
-
-router.get('/list', (req, res) => {
-    let qry = 'select * from users';
-    console.log(`The query: ${qry}`);
-
-    let userData = [req.body.email,
-                    ]
-
-    conn.query(qry, (err, rows) => {
-
-        console.log(`error: ${err}`);
-        if(err) return res.status(500).json({error: err});
-
-        console.log(`no error`);
-        // Check if database is empty
-        if (rows.length == 0)
-            res.status(400).json({msg: 'No users found'});
-
-        // Database is not empty
-        else {
-            let user = req.body.email;
-            // For loop through all users to check for matching emails
-            for (let row of rows) {
-                // Check if user is in database
-                if (user == row.email) {
-                    let hash = req.body.password;
-                    let password = row.password;
-                    if (hash == password) {
-                        console.log("Login successful");
-
-                    }
-                    // Invalid credentials
-                    else {
-                        res.status(400).json({msg: 'Invalid login'});
-                    }
-                }
-                // User not found
-                else {
-                    res.status(400).json({msg: 'Invalid login'});
-                }
-            }
-        }
-    })
-})
 
 router.post('/auth', (req, res) => {
     let qry = 'select email, password from users where email=?';
@@ -64,7 +22,7 @@ router.post('/auth', (req, res) => {
 
         // Server error
         if (err) {
-            res.status(500).json({msg: 'Server error'});
+            res.status(500).json({err: 'Server error'});
         }
 
         // User found
@@ -73,24 +31,71 @@ router.post('/auth', (req, res) => {
             let user = rows[0];
             let password = user.password;
 
+            // Encypt password
             if (bcrypt.compareSync(req.body.password, password)) {
-                const token = jwt.encode({username: user.email}, secret);
+                const token = jwt.encode({username: user.email}, config.secret);
+                res.json({ token: token });
                 console.log(token);
-                res.status(200).json({token: token, msg: 'Successful'});
+                res.status(200).json({"token": token, msg: 'Successful'});
 
 
             }
+            // Invalid login
             else {
-                res.status(400).json({msg: 'Invalid login'});
+                res.status(401).json({err: 'Invalid login'});
             }
         }
 
         // User not found
         else {
             console.log('User not found');
-            res.status(500).json({msg: 'User not found'});
+            res.status(401).json({err: 'Invalid login'});
         }
     })
+})
+
+// Route to create user
+router.post('/create', (req, res) => {
+    let dateCreated = new Date();
+    let qry = "insert into users (email, password, lname, fname, dateCreated)";
+    qry += "values(?, ?, ?, ?, ?)";
+
+    // Password encryption
+    hashPassword = bcrypt.hashSync(req.body.password, 10);
+
+    // Define user data
+    let userData = [req.body.email, hashPassword, req.body.lname, req.body.fname, dateCreated];
+
+    conn.query(qry, userData, (err,result) => {
+        if (err) {
+            // Duplicate user
+            if (err.errno == 1062) {
+                res.status(409).json({err: 'Duplicate error'});
+            }
+            // Server error
+            else {
+                res.status(500).json({err: 'Server error'});
+            }
+        }
+        // Account created successfully
+        else {
+            res.status(201).json({msg: 'Account created'});
+        }
+    })
+});
+
+// Gets status of users
+router.get('/status', (req,res) => {
+    if (!req.headers["x-auth"]) {
+        res.status(401).json({err: 'Missing X-Auth header'})
+    }
+    const token = req.headers["x-auth"];
+    try {
+        const decoded = jwt.decode(token, config.secret);
+    }
+    catch (ex) {
+        res.status(401).json({err: "Invalid"});
+    }
 })
 
 module.exports = router;
