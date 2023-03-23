@@ -22,24 +22,23 @@ import {
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 
- export function Login(email, password) {
-	axios.post('http:/10.15.5.49:3000/api/user/auth',{
-		'email': email,
-		'password': password
-	})
-  	.then(response => {
-    	//console.log(response.data);
-		//console.log("Token?")
-		const tokenResponse = response.data;
-		SecureStore.setItemAsync("token", tokenResponse.token);
-  	})
-  	.catch(error => {
-    	//console.log(error);
-		//console.log(email);
-		//console.log(password);
-  	});
+export function Login(email, password) {
+	axios
+		.post("http:/10.15.5.49:3000/api/user/auth", {
+			email: email,
+			password: password,
+		})
+		.then((response) => {
+			//console.log(response.data);
+			//console.log("Token?")
+			const tokenResponse = response.data;
+			SecureStore.setItemAsync("token", tokenResponse.token);
+		})
+		.catch((error) => {
+			//console.log(error);
+			//console.log(email);
+			//console.log(password);
+		});
 }
-
-//http:/10.0.2.2:3000/api/user/auth
 
 export default Login;

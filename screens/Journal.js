@@ -6,6 +6,14 @@
   This file is used to display the journal screen if the user is logged in and has
   a valid token or display a login modal if not.
 
+  Modification Log: 
+	03/22/2023: added a useState hook to determine if modal should be shown
+				added a Login import to route the login to the correct API
+				added a function (checkToken) to check for a token
+				added a function (handlePress) to handle the button press on the
+				login modal
+				added a function (getToken) to retrieve token from SecureStore
+
  */
 
 import React, { useEffect, useState } from "react";
@@ -72,10 +80,6 @@ export function Journal() {
 			</View>
 		</View>
 	);
-}
-
-async function save(key, value) {
-	await SecureStore.setItemAsync(key, value);
 }
 
 async function getToken(key) {
