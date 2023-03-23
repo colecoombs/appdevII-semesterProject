@@ -4,15 +4,18 @@ import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import * as SecureStore from 'expo-secure-store';
 
 import HomeScreen from './screens/HomeScreen';
 import Location from './screens/Location';
 import Journal from './screens/Journal';
+import axios from 'axios';
 
-const curLocation = {zip: '65802', city: 'Springfield'};
+const curLocation = {zip: '65802'};
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
 
 const App =() => {
     return (

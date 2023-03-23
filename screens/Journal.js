@@ -1,21 +1,109 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+/*
+  file: Journal.js
+  author: C. Coombs
+  date: 03/20/2023
+  
+  This file is used to display the journal screen if the user is logged in and has
+  a valid token or display a login modal if not.
 
-function Journal() {
-  return (
-    <View style={styles.container}>
-        <Text>Journal Screen</Text>
-    </View>
-  )
+ */
+
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, Modal, Button, TextInput } from "react-native";
+import * as SecureStore from "expo-secure-store";
+import axios from "axios";
+import Login from "../components/Login";
+
+export function Journal() {
+	const [authenticated, setAuthenticated] = useState(false);
+	const [emailInput, setEmailInput] = useState("");
+	const [passInput, setPassInput] = useState("");
+
+	const checkToken = async () => {
+ 		let token = await getToken();
+		//console.log(`Token is: ${token}`);
+		if (!token) {
+				setAuthenticated(false);
+			
+		} else {
+			
+				setAuthenticated(true);
+			
+		}
+	}
+
+	const handlePress = () => {
+		let email = emailInput;
+		let pass = passInput;
+		Login(email, pass);
+		checkToken();
+	};
+
+
+	return (
+		<View style={styles.container}>
+			<Modal
+				title="LoginModal"
+				transparent={true}
+				visible={!authenticated}
+				animation="none"
+			>
+				<View style={styles.container}>
+					<TextInput
+						style={styles.textField}
+						placeholder="Email"
+						id="email"
+						value={emailInput}
+						onChangeText={(text) => setEmailInput(text)}
+					></TextInput>
+					<TextInput
+						id="pass"
+						style={styles.textField}
+						placeholder="Password"
+						secureTextEntry={true}
+						value={passInput}
+						onChangeText={(passText) => setPassInput(passText)}
+					></TextInput>
+					<Button title="Submit" onPress={handlePress} />
+				</View>
+			</Modal>
+			<View style={styles.container}>
+				<Text>Logged in</Text>
+			</View>
+		</View>
+	);
 }
 
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  });
+async function save(key, value) {
+	await SecureStore.setItemAsync(key, value);
+}
 
-export default Journal
+async function getToken(key) {
+	let result = await SecureStore.getItemAsync("token");
+	if (result) {
+		//console.log(`There is a token! It is ${result}`);
+		return result;
+	} else {
+		//console.log("No token");
+	}
+}
+
+// style sheets
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: "#fff",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+
+	textField: {
+		backgroundColor: "antiquewhite",
+		borderRadius: 4,
+		width: 250,
+		height: 35,
+		margin: 10,
+	},
+});
+
+export default Journal;

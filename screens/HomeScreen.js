@@ -18,156 +18,197 @@
 
  */
 
-import React, {useState, useEffect} from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
-import axios from 'axios';
-import dayjs from 'dayjs';
-import GetCity from '../components/GetCity';
-import GetImage from '../components/GetImage';
-import FutureForecast from '../components/FutureForecast';
-import MiddleWeather from '../components/MiddleWeather';
-import GetCurrentWeather from '../components/Weather';
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, Image } from "react-native";
+import axios from "axios";
+import dayjs from "dayjs";
+import GetCity from "../components/GetCity";
+import GetImage from "../components/GetImage";
+import FutureForecast from "../components/FutureForecast";
+import MiddleWeather from "../components/MiddleWeather";
+import GetCurrentWeather from "../components/Weather";
 
-
+// This function uses an axios call to fetch the current weather and calls on different
+// functions to display this information in their respective sections
 function HomeScreen() {
-  const apiKey = 'd95207455d6fbc8aa3659b659f721c47';
-  const [weather, setWeather] = useState({reqDT: 1, description: '', temp: 0});
-  const [zip, setZip] = useState('65802');
+	const apiKey = "d95207455d6fbc8aa3659b659f721c47";
+	const [weather, setWeather] = useState({
+		reqDT: 1,
+		description: "",
+		temp: 0,
+	});
+	const [zip, setZip] = useState("65802");
 
-  // Url for the website
-  const url = `https://api.openweathermap.org/data/2.5/weather?zip=${zip},us&appid=${apiKey}&units=imperial`;
-  console.log(url);
+	// Url for the website
+	const url = `https://api.openweathermap.org/data/2.5/weather?zip=${zip},us&appid=${apiKey}&units=imperial`;
+	console.log(url);
 
-  useEffect(() => {
-      axios
-      .get(url)
-      .then(res => {
-          // Different fields used to display the current conditions
-          setWeather({ ...weather,
-              reqDT: dayjs(new Date(res.data.dt * 1000)).format('ddd, MMM D'),
-              description: res.data.weather[0].description,
-              temp: res.data.main.temp,
-              id: res.data.weather[0].id,
-              feels: res.data.main.feels_like,
-              min: res.data.main.temp_min,
-              max: res.data.main.temp_max,
-              wind: res.data.wind.speed,
-              city: res.data.name,
-              state: '',
-              humidity: res.data.main.humidity,
-              weatherCode: res.data.weather[0].main,
-            });
-            console.log(JSON.stringify(res.data));
-            console.log(res.data.dt);
-            console.log(JSON.stringify(weather));
-            console.log('Weather code: ', weather.weatherCode);
-            console.log('Weather ID: ', weather.id);
-      })
-      .catch(err=> {
-          console.log(err);
-      })
-  },[zip])
-  if (weather.reqDT!==1)
-  return (
-    <View style={styles.container}>
-        <View>
-          <GetCity city = {weather.city} zip = {zip} />
-        </View>
-      <View style={styles.row}>
-          <View style={styles.row}>
-            <GetImage weatherCode = {weather.weatherCode} id = {weather.id} wind = {weather.wind} />
-          </View>
-        <View style={styles.row}>
-            <GetCurrentWeather temp = {weather.temp} date = {weather.reqDT} feels = {weather.feels} />
-        </View>
-      </View>
-        <MiddleWeather humidity={weather.humidity} max={weather.max} min={weather.min} wind={weather.wind} />
-      <View style={styles.container}>
-        <View style={styles.row}>
-            <FutureForecast date='Sun 15' imageName='weather-windy' high='54' low='48' chance='41%' />
-            <FutureForecast date='Mon 16' imageName='weather-partly-cloudy' high='63' low='35' chance='43%' />
-            <FutureForecast date='Tue 17' imageName='weather-pouring' high='54' low='40' chance='43%' />
-            <FutureForecast date='Wed 18' imageName='weather-pouring' high='52' low='35' chance='80%' />
-        </View>
-      </View>
-    </View>
-    )
-    else
-    return (
-      <View>
-          <Text>Loading ...</Text>
-      </View>
-    )
+	useEffect(() => {
+		axios
+			.get(url)
+			.then((res) => {
+				// Different fields used to display the current conditions
+				setWeather({
+					...weather,
+					reqDT: dayjs(new Date(res.data.dt * 1000)).format("ddd, MMM D"),
+					description: res.data.weather[0].description,
+					temp: res.data.main.temp,
+					id: res.data.weather[0].id,
+					feels: res.data.main.feels_like,
+					min: res.data.main.temp_min,
+					max: res.data.main.temp_max,
+					wind: res.data.wind.speed,
+					city: res.data.name,
+					state: "",
+					humidity: res.data.main.humidity,
+					weatherCode: res.data.weather[0].main,
+				});
+				console.log(JSON.stringify(res.data));
+				//console.log(res.data.dt);
+				//console.log(JSON.stringify(weather));
+				//console.log('Weather code: ', weather.weatherCode);
+				//console.log('Weather ID: ', weather.id);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}, [zip]);
+	if (weather.reqDT !== 1)
+		return (
+			<View style={styles.container}>
+				<View>
+					<GetCity city={weather.city} zip={zip} />
+				</View>
+				<View style={styles.row}>
+					<View style={styles.row}>
+						<GetImage
+							weatherCode={weather.weatherCode}
+							id={weather.id}
+							wind={weather.wind}
+						/>
+					</View>
+					<View style={styles.row}>
+						<GetCurrentWeather
+							temp={weather.temp}
+							date={weather.reqDT}
+							feels={weather.feels}
+						/>
+					</View>
+				</View>
+				<MiddleWeather
+					humidity={weather.humidity}
+					max={weather.max}
+					min={weather.min}
+					wind={weather.wind}
+				/>
+				<View style={styles.container}>
+					<View style={styles.row}>
+						<FutureForecast
+							date="Sun 15"
+							imageName="weather-windy"
+							high="54"
+							low="48"
+							chance="41%"
+						/>
+						<FutureForecast
+							date="Mon 16"
+							imageName="weather-partly-cloudy"
+							high="63"
+							low="35"
+							chance="43%"
+						/>
+						<FutureForecast
+							date="Tue 17"
+							imageName="weather-pouring"
+							high="54"
+							low="40"
+							chance="43%"
+						/>
+						<FutureForecast
+							date="Wed 18"
+							imageName="weather-pouring"
+							high="52"
+							low="35"
+							chance="80%"
+						/>
+					</View>
+				</View>
+			</View>
+		);
+	else
+		return (
+			<View>
+				<Text>Loading ...</Text>
+			</View>
+		);
 }
 
-
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingTop: 35,
-      paddingBottom: 40,
-      
-    },
-    city: {
-      fontSize: 24,
-    },
-    normalText: {
-      fontSize: 24,
-    },
-    boldText: {
-      fontSize: 45,
-      fontWeight: 'bold'
-    },
-    row: {
-      flex: 1,
-      flexDirection: 'row',
-      justifyContent: 'space-evenly',
-      paddingTop: 10,
-      alignContent: 'center'
-    },
-    image: {
-      flex: 1,
-      alignItems: 'center',
-      paddingRight: 60,
-      justifyContent: 'center',
-    },
+	container: {
+		flex: 1,
+		backgroundColor: "#fff",
+		alignItems: "center",
+		justifyContent: "center",
+		paddingTop: 35,
+		paddingBottom: 40,
+	},
+	city: {
+		fontSize: 24,
+	},
+	normalText: {
+		fontSize: 24,
+	},
+	boldText: {
+		fontSize: 45,
+		fontWeight: "bold",
+	},
+	row: {
+		flex: 1,
+		flexDirection: "row",
+		justifyContent: "space-evenly",
+		paddingTop: 10,
+		alignContent: "center",
+	},
+	image: {
+		flex: 1,
+		alignItems: "center",
+		paddingRight: 60,
+		justifyContent: "center",
+	},
 
-    resize: {
-      width: 240,
-      height: 160,
-      resizeMode: 'contain'
-    },
+	resize: {
+		width: 240,
+		height: 160,
+		resizeMode: "contain",
+	},
 
-    col: {
-      flex: 1,
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      rowGap: 20,
-      flexGrow: 2,
-    },
+	col: {
+		flex: 1,
+		flexDirection: "column",
+		alignItems: "center",
+		justifyContent: "center",
+		rowGap: 20,
+		flexGrow: 2,
+	},
 
-    colTop: {
-      flex: 1,
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      rowGap: 20,
-      flexGrow: 2,
-      paddingTop: 30,
-    },
-    futureCast: {
-      fontSize: 25,
-      padding: 5
-    },
+	colTop: {
+		flex: 1,
+		flexDirection: "column",
+		alignItems: "center",
+		justifyContent: "center",
+		rowGap: 20,
+		flexGrow: 2,
+		paddingTop: 30,
+	},
+	futureCast: {
+		fontSize: 25,
+		padding: 5,
+	},
 
-    imageStyle: {
-      width: 240,
-      height: 160,
-    }
-  });
+	imageStyle: {
+		width: 240,
+		height: 160,
+	},
+});
 
-export default HomeScreen
+export default HomeScreen;

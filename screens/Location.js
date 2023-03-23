@@ -1,8 +1,16 @@
+/*
+  file: Location.js
+  author: C. Coombs
+  date: 03/20/2023
+  
+  This file is used to display the locations.
+
+ */
+
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 function Location(route, navigation) {
-  const {zip, city} = route.params
   return (
     <View style={styles.container}>
         <Text>Location Screen</Text>
