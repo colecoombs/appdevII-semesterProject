@@ -3,5 +3,6 @@
     "user": "weatherdev",
     "password": "Letmein1!",
     "database": "weather",
-    "secret": "supersecret"
+    "secret": "supersecret",
+    "tokenExpiration": 5
 }
