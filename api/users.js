@@ -6,6 +6,7 @@
 
      Modification Log: 
         03/20/2023: Added route to create user
+		04/10/2023: Updated auth route to update last login in the database
 */
 
 const bcrypt = require("bcrypt");
@@ -14,6 +15,7 @@ const router = require("express").Router();
 const conn = require("../db");
 const config = require("../configuration/config.json");
 const dayjs = require('dayjs');
+const { reject } = require("bcrypt/promises");
 
 router.post("/auth", (req, res) => {
 	let qry = "select email, password from users where email=?";
@@ -31,14 +33,14 @@ router.post("/auth", (req, res) => {
 
 			// Encypt password
 			if (bcrypt.compareSync(req.body.password, password)) {
-				const token = jwt.encode({ username: user.email }, config.secret);
-				let lastLogin = dayjs(Date.now()).format("YYYY-MM-DD HH:mm:ss")
-				res.json({ token: token });
-				conn.query(`UPDATE weather.users SET lastLogin = ${lastLogin} where email = ${req.body.email}`, () => {});
-                conn.query(`UPDATE weather.users SET token = '${token}' where email = ${req.body.email}`, () => {});
-				console.log(token);
-				res.status(200).json({ token: token, msg: "Successful" });
+				const payload = {username: user.email};
+				const token = jwt.encode(payload , config.secret);
+				const lastLogin = new Date();
+				saveLastLogin(req.body.email, lastLogin)
+					.then(() => res.status(200).json({"token" : token}))
+					.catch(() => res.status(500).json({err : "Server error"}))
 			}
+
 			// Invalid login
 			else {
 				res.status(401).json({ err: "Invalid login" });
@@ -79,7 +81,7 @@ router.post("/create", (req, res) => {
 			}
 			// Server error
 			else {
-				res.status(500).json({ err: "Server error" });
+				res.status(500).json({ error: "Server error" });
 			}
 		}
 		// Account created successfully
@@ -89,17 +91,18 @@ router.post("/create", (req, res) => {
 	});
 });
 
-// Gets status of users
-router.get("/status", (req, res) => {
-	if (!req.headers["x-auth"]) {
-		res.status(401).json({ err: "Missing X-Auth header" });
-	}
-	const token = req.headers["x-auth"];
-	try {
-		const decoded = jwt.decode(token, config.secret);
-	} catch (ex) {
-		res.status(401).json({ err: "Invalid" });
-	}
-});
+const saveLastLogin = (email, lastLogin) => {
+	return new Promise((resolve, reject) => {
+		let qry = "update users set lastlogin=? where email=?";
+		conn.query(qry, [lastLogin, email], (error, result) => {
+			if (!error) {
+				resolve();
+			}
+			else {
+				reject('Update failed');
+			}
+		})
+	})
+}
 
 module.exports = router;
