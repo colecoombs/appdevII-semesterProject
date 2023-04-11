@@ -9,7 +9,8 @@ import * as SecureStore from 'expo-secure-store';
 import HomeScreen from './screens/HomeScreen';
 import Location from './screens/Location';
 import Journal from './screens/Journal';
-import axios from 'axios';
+
+import getJournal from './components/GetJournal';
 
 const curLocation = {zip: '65802'};
 

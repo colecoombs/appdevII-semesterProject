@@ -21,6 +21,7 @@ import { View, Text, StyleSheet, Modal, Button, TextInput } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 import Login from "../components/Login";
+import LoginModal from "../components/LoginModal";
 
 export function Journal() {
 	const [authenticated, setAuthenticated] = useState(false);
@@ -29,6 +30,7 @@ export function Journal() {
 
 	const checkToken = async () => {
  		let token = await getToken();
+		console.log('Checking token');
 		//console.log(`Token is: ${token}`);
 		if (!token) {
 				setAuthenticated(false);
@@ -36,6 +38,7 @@ export function Journal() {
 		} else {
 			
 				setAuthenticated(true);
+				console.log('Logged in');
 			
 		}
 	}
@@ -50,31 +53,7 @@ export function Journal() {
 
 	return (
 		<View style={styles.container}>
-			<Modal
-				title="LoginModal"
-				transparent={true}
-				visible={!authenticated}
-				animation="none"
-			>
-				<View style={styles.container}>
-					<TextInput
-						style={styles.textField}
-						placeholder="Email"
-						id="email"
-						value={emailInput}
-						onChangeText={(text) => setEmailInput(text)}
-					></TextInput>
-					<TextInput
-						id="pass"
-						style={styles.textField}
-						placeholder="Password"
-						secureTextEntry={true}
-						value={passInput}
-						onChangeText={(passText) => setPassInput(passText)}
-					></TextInput>
-					<Button title="Submit" onPress={handlePress} />
-				</View>
-			</Modal>
+			<LoginModal/>
 			<View style={styles.container}>
 				<Text>Logged in</Text>
 			</View>

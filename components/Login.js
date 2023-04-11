@@ -24,7 +24,7 @@ import axios from "axios";
 
 export function Login(email, password) {
 	axios
-		.post("http:/10.15.5.49:3000/api/user/auth", {
+		.post("http:/10.15.15.60:3000/api/user/auth", {
 			email: email,
 			password: password,
 		})
