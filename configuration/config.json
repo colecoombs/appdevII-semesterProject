@@ -4,6 +4,6 @@
     "password": "Letmein1!",
     "database": "weather",
     "secret": "supersecret",
-    "expTime": 2,
+    "expTime": 60000,
     "divideTime": 60
 }

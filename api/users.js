@@ -33,7 +33,7 @@ router.post("/auth", (req, res) => {
 
 			// Encypt password
 			if (bcrypt.compareSync(req.body.password, password)) {
-				const payload = {username: user.email};
+				const payload = {user: user.email};
 				const token = jwt.encode(payload , config.secret);
 				const lastLogin = new Date();
 				saveLastLogin(req.body.email, lastLogin)

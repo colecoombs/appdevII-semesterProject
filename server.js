@@ -15,7 +15,7 @@ const router = express.Router();
 router.use(express.json());
 
 router.use('/api/user', require('./api/users'));
-router.use('/api/journal', require('./api/data'));
+router.use('/api/data', require('./api/data'));
 
 app.use(router);
 
