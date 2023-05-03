@@ -24,6 +24,7 @@ import { useIsFocused } from "@react-navigation/native";
 	const [passInput, setPassInput] = useState("");
     const isFocused = useIsFocused();
 
+    // Used to check if token is valid each time you re-visit the page
     useEffect(() => {
         checkTokenAgain()
     },[isFocused])
@@ -32,7 +33,6 @@ import { useIsFocused } from "@react-navigation/native";
 		console.log('Checking token');
         // Result fetches token
         let result = await SecureStore.getItemAsync("token");
-		//console.log(`Token is: ${token}`);
 		if (!result) {
 			setAuthenticated(false);
 			
@@ -42,13 +42,14 @@ import { useIsFocused } from "@react-navigation/native";
 	    }
     }
 
+    // utility function used during the useEffect when the page is re-visited. 
     const checkTokenAgain = async () => {
         let result = await SecureStore.getItemAsync("token");
         if (result && isFocused) {
             // Axios Call
             // If Token is good, set auth to true
             // If your token is bad, set auth to false
-            let tokenURL = "http:/10.15.15.60:3000/api/data/load_data"
+            let tokenURL = `http:/10.15.6.93:3000/api/data/load_data`
             let storedToken = result;
             await axios({
                 method: "get",
@@ -58,30 +59,34 @@ import { useIsFocused } from "@react-navigation/native";
                 },
             })
             .then((response) => {
+                // If token is valid, show journal
                 if (response.status == 200) {
                     setAuthenticated(true);
                 }
+                // token has expired, hide journal page
                 else {
                     setAuthenticated(false);
                 }
             })
+            // Server error
             .catch((error) => {
                 setAuthenticated(false);
                 console.log(error);
             });	
         }
+        // If no token is present and the Journal screen is focused, hide journal contents
         else if (isFocused){
             setAuthenticated(false)
         }
     };
 
+    // function to handle the Login button
 	const handlePress = () => {
 		let email = emailInput;
 		let pass = passInput;
 		Login(email, pass);
 		checkToken();
 	};
-
 
     return (
         <Modal
@@ -111,6 +116,12 @@ import { useIsFocused } from "@react-navigation/native";
 			</Modal>
     )
   }
+
+  export function getAuth() {
+    let auth = authenticated;
+    return auth;
+  }
+
 
   const styles = StyleSheet.create({
 	container: {

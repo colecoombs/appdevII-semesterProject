@@ -14,16 +14,18 @@ import {Text, View, Image, StyleSheet, ActivityIndicator, FlatList} from 'react-
 import axios from 'axios';
 
 export function getJournal() {
-  console.log("Testing");
 	axios
 		.post("http:/10.15.5.49:3000/api/data/load_data", {
+      email: email,
 
 		})
+    // success
 		.then((response) => {
         if (response.status===200) {
           
         }
 		})
+    //error
 		.catch((error) => {
         res.status()
 		});

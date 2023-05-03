@@ -3,8 +3,7 @@
   author: C. Coombs
   date: 02/03/2023
   
-  This file is used to login to the app. It will also provide utility for signing up if the user
-  does not have an account with the application yet.
+  This file is used to login to the app. It makes an API call to the server side using the "auth" route
   
   Modifications:
 
@@ -22,23 +21,29 @@ import {
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 
+const config = require("../configuration/config.json");
+//const jwt = require("jwt-simple");
+
+
 export function Login(email, password) {
 	axios
-		.post("http:/10.15.15.60:3000/api/user/auth", {
+		.post("http:/10.15.6.93:3000/api/user/auth", {
 			email: email,
 			password: password,
 		})
+		// success
 		.then((response) => {
-			//console.log(response.data);
-			//console.log("Token?")
 			const tokenResponse = response.data;
+			//const user = jwt.decode(tokenResponse.data, config.secret);
 			SecureStore.setItemAsync("token", tokenResponse.token);
 		})
+		// errors
 		.catch((error) => {
-			//console.log(error);
-			//console.log(email);
-			//console.log(password);
 		});
+}
+
+export function getEmail(email) {
+	return email;
 }
 
 export default Login;

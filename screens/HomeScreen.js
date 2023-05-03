@@ -41,7 +41,6 @@ function HomeScreen() {
 
 	// Url for the website
 	const url = `https://api.openweathermap.org/data/2.5/weather?zip=${zip},us&appid=${apiKey}&units=imperial`;
-	console.log(url);
 
 	useEffect(() => {
 		axios
@@ -63,14 +62,11 @@ function HomeScreen() {
 					humidity: res.data.main.humidity,
 					weatherCode: res.data.weather[0].main,
 				});
-				console.log(JSON.stringify(res.data));
-				//console.log(res.data.dt);
-				//console.log(JSON.stringify(weather));
-				//console.log('Weather code: ', weather.weatherCode);
-				//console.log('Weather ID: ', weather.id);
+				//console.log(JSON.stringify(res.data));
 			})
 			.catch((err) => {
 				console.log(err);
+				console.log("Weather");
 			});
 	}, [zip]);
 	if (weather.reqDT !== 1)

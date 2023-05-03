@@ -10,8 +10,6 @@ import HomeScreen from './screens/HomeScreen';
 import Location from './screens/Location';
 import Journal from './screens/Journal';
 
-import getJournal from './components/GetJournal';
-
 const curLocation = {zip: '65802'};
 
 const Stack = createNativeStackNavigator();
