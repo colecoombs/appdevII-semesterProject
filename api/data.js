@@ -4,7 +4,8 @@
 
      Api route for journal data
 
-     Modification Log: 
+     Modification Log:
+	 	05/01/2023 - Added a query to the database to return the 10 most recent journal entries 
         
 */
 
@@ -20,62 +21,37 @@ router.get("/load_data", (req, res) => {
 	console.log("route called");
 	if (!req.headers["x-auth"]) {
 		res.status(403).json({ err: "Missing X-Auth header" });
+		console.log("1");
 	}
 	const token = req.headers["x-auth"];
 
 	const decoded = jwt.decode(token, config.secret);
-	//console.log("1")
-	//console.log("User", decoded.user);
 	let qry = "select * from users where email=?";
-	//console.log("fuck you")
 	conn.query(qry, decoded.user, (err, rows) => {
 		if (err) return res.status(500).json({error: err});
-		//console.log(rows[0].lastLogin);
-		//console.log(rows);
 		const lastLogin = new Date(rows[0].lastLogin);
 		const curDate = new Date();
 		let timeDiff = curDate.getTime() - lastLogin.getTime();
-		//console.log("Time Diff", timeDiff);
 		if (timeDiff > config.expTime) {
 			res.status(403).json({err: "Timed out"});
-			//console.log("success");
-			// add code to kill token
+			console.log("2");
 		}
 		else {
-			res.status(200).json({ msg: "Success" });
-			//console.log("timed out");
+			console.log("3");
+			let qry = "SELECT * FROM weather.journal_entry WHERE users_email=? ORDER BY date_of_entry LIMIT ?;";
+			conn.query(qry, [decoded.user, config.journal_limit], (err, result) => {
+				if (err) {
+					console.log("4");
+					return res.status(500).json({error: err});
+				}
+				else {
+					console.log("5");
+					return res.status(200).json({result});
+				}
+			})
 		}
 	});
-	console.log("I'm still alive");
 });
-// 	try {
-//         const decoded = jwt.decode(token, config.secret);
-// 		console.log("1")
-// 		console.log("User", decoded.user);
-// 		let qry = "select * from users where email=?";
-// 		console.log("fuck you")
-// 		conn.query(qry, decoded.user, (err, rows) => {
-// 			if (err) return res.status(500).json({error: err});
-// 			console.log(rows[0].lastLogin);
-// 			console.log(rows);
-// 			const lastLogin = new Date(rows[0].lastLogin);
-// 			const curDate = new Date();
-// 			let timeDiff = curDate.getTime() - lastLogin.getTime();
-// 			console.log("Time Diff", timeDiff);
-// 			if (timeDiff > config.expTime) {
-// 				res.status(200).json({msg: "Success"});
-// 				console.log("success");
-// 				// add code to kill token
-// 			}
-// 			else {
-// 				res.status(403).json({ err: "Timed out" });
-// 				console.log("timed out");
-// 			}
-// 		});
-// 	} catch (ex) {
-// 		res.status(403).json({ err: "Invalid" });
-// 	}
-// });
 
 module.exports = router;
 
