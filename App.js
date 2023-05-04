@@ -1,10 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import * as SecureStore from 'expo-secure-store';
+import { SplashScreen } from 'expo-splash-screen';
+import React, { useEffect } from "react";
 
 import HomeScreen from './screens/HomeScreen';
 import Location from './screens/Location';
@@ -17,6 +17,18 @@ const Tab = createBottomTabNavigator();
 
 
 const App =() => {
+  useEffect(() => {
+    async function prepare() {
+      await SplashScreen.preventAutoHideAsync();
+    }
+    prepare();
+  }, []);
+
+    // Wait for app to load and then hide the splash screen
+    setTimeout(async () => {
+      await SplashScreen.hideAsync();
+    }, 3000000);
+
     return (
         <NavigationContainer>
           <Tab.Navigator

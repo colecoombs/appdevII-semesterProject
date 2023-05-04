@@ -17,7 +17,7 @@ import axios from "axios";
 import Login from "../components/Login";
 import { useIsFocused } from "@react-navigation/native";
   
-  export default function LoginModal() {
+export default function LoginModal() {
 
     const [authenticated, setAuthenticated] = useState(false);
 	const [emailInput, setEmailInput] = useState("");
@@ -115,11 +115,6 @@ import { useIsFocused } from "@react-navigation/native";
 				</View>
 			</Modal>
     )
-  }
-
-  export function getAuth() {
-    let auth = authenticated;
-    return auth;
   }
 
 

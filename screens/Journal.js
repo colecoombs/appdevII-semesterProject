@@ -17,6 +17,94 @@
 
  */
 
+/* import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, Modal, Button, TextInput, ScrollView, TouchableOpacity } from "react-native";
+import * as SecureStore from "expo-secure-store";
+import axios from "axios";
+import LoginModal from "../components/LoginModal";
+
+export function Journal({}) {
+	const token = SecureStore.getItemAsync("token", token)
+	const [journalEntries, setJournalEntries] = useState([]);
+
+
+	const loadJournalEntries = async () => {
+		let token = await SecureStore.getItemAsync("token");
+		try {
+		  const response = await axios.get(`http:/10.15.6.93:3000/api/data/load_data`,{
+			headers: {
+				'x-auth': token
+			}
+		  });
+		  setJournalEntries(response.data.result);
+		} catch (error) {
+		  console.log(error);
+		}
+	  };
+
+
+ 	useEffect(() => {
+		let token = SecureStore.getItemAsync("token");
+		if (token) {
+			loadJournalEntries();
+		}
+		else {
+			return;
+		}
+	}, []); 
+
+	return (
+			<View>
+				<ScrollView>
+					<LoginModal/>
+					{journalEntries.map((entry)=>{
+						console.log('====================================');
+						console.log(`${entry.title}, ${entry.journal_entry}`);
+						console.log('====================================');
+					})}
+				{journalEntries.map((entry) => (
+					<TouchableOpacity style={styles.button}>
+						<Text key={entry.jid}>{entry.title}</Text>
+						<Text key={entry.title}>{entry.journal_entry}</Text>
+						
+					</TouchableOpacity>
+				))}
+			  </ScrollView>
+			</View>
+		  );
+}
+
+export function activateJournal() {
+	loadJournalEntries();
+}
+
+
+// style sheets
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: "#fff",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+
+	textField: {
+		backgroundColor: "antiquewhite",
+		borderRadius: 4,
+		width: 250,
+		height: 35,
+		margin: 10,
+	},
+
+	button: {
+		alignItems: 'center',
+		backgroundColor: '#DDDDDD',
+		padding: 10,
+	}
+});
+ */
+//export default Journal;
+
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -67,7 +155,7 @@ function Journal() {
 
   return (
     <View style={styles.container}>
-		<LoginModal />
+		  <LoginModal/>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         {loading ? (
           <Text style={styles.loadingText}>Loading entries...</Text>
@@ -80,8 +168,10 @@ function Journal() {
                 // Add code to open the journal entry
               }}
             >
-              <Text style={styles.entryTitle}>{entry.title}</Text>
-			        <Text style={styles.entryTitle}>{new Date(entry.date_of_entry).toLocaleDateString()}</Text>
+              <View style = {styles.row}>
+                <Text style={styles.entryTitle}>{entry.title}</Text>
+			          <Text style={styles.entryTitle}>{new Date(entry.date_of_entry).toLocaleDateString()}</Text>
+              </View>
               <Text style={styles.entryText}>{entry.journal_entry}</Text>
             </TouchableOpacity>
           ))
@@ -111,8 +201,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     margin: 10,
-    width: "100%",
-    maxWidth: 500,
+    width: "95%",
   },
   entryTitle: {
     fontWeight: "bold",
@@ -122,7 +211,6 @@ const styles = StyleSheet.create({
   entryText: {
     fontSize: 16,
 	justifyContent: "space-between",
-	flex: "row"
   },
   loadingText: {
     marginVertical: 20,
@@ -133,6 +221,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontStyle: "italic",
   },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  }
 });
 
 export default Journal;
