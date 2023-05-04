@@ -13,97 +13,12 @@
 				added a function (handlePress) to handle the button press on the
 				login modal
 				added a function (getToken) to retrieve token from SecureStore
-	05/03/2023: 
+	05/03/2023: added an axios call to the server side to retrive 10 journal entries
+              added a loop to show the 10 journal entries in a touchable opacity
+              scroll view
+              added a useEffect to render the journal page each time it is clicked on
 
  */
-
-/* import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Modal, Button, TextInput, ScrollView, TouchableOpacity } from "react-native";
-import * as SecureStore from "expo-secure-store";
-import axios from "axios";
-import LoginModal from "../components/LoginModal";
-
-export function Journal({}) {
-	const token = SecureStore.getItemAsync("token", token)
-	const [journalEntries, setJournalEntries] = useState([]);
-
-
-	const loadJournalEntries = async () => {
-		let token = await SecureStore.getItemAsync("token");
-		try {
-		  const response = await axios.get(`http:/10.15.6.93:3000/api/data/load_data`,{
-			headers: {
-				'x-auth': token
-			}
-		  });
-		  setJournalEntries(response.data.result);
-		} catch (error) {
-		  console.log(error);
-		}
-	  };
-
-
- 	useEffect(() => {
-		let token = SecureStore.getItemAsync("token");
-		if (token) {
-			loadJournalEntries();
-		}
-		else {
-			return;
-		}
-	}, []); 
-
-	return (
-			<View>
-				<ScrollView>
-					<LoginModal/>
-					{journalEntries.map((entry)=>{
-						console.log('====================================');
-						console.log(`${entry.title}, ${entry.journal_entry}`);
-						console.log('====================================');
-					})}
-				{journalEntries.map((entry) => (
-					<TouchableOpacity style={styles.button}>
-						<Text key={entry.jid}>{entry.title}</Text>
-						<Text key={entry.title}>{entry.journal_entry}</Text>
-						
-					</TouchableOpacity>
-				))}
-			  </ScrollView>
-			</View>
-		  );
-}
-
-export function activateJournal() {
-	loadJournalEntries();
-}
-
-
-// style sheets
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#fff",
-		alignItems: "center",
-		justifyContent: "center",
-	},
-
-	textField: {
-		backgroundColor: "antiquewhite",
-		borderRadius: 4,
-		width: 250,
-		height: 35,
-		margin: 10,
-	},
-
-	button: {
-		alignItems: 'center',
-		backgroundColor: '#DDDDDD',
-		padding: 10,
-	}
-});
- */
-//export default Journal;
 
 import React, { useEffect, useState } from "react";
 import {
@@ -117,12 +32,15 @@ import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 import LoginModal from "../components/LoginModal";
 import { useIsFocused } from "@react-navigation/native";
+import {MaterialCommunityIcons} from '@expo/vector-icons/';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 function Journal() {
   const isFocused = useIsFocused();
   const [journalEntries, setJournalEntries] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  // Loads 
   const loadJournalEntries = async () => {
     setLoading(true);
     const token = await SecureStore.getItemAsync("token");
@@ -169,18 +87,24 @@ function Journal() {
               }}
             >
               <View style = {styles.row}>
-                <Text style={styles.entryTitle}>{entry.title}</Text>
+                <MaterialCommunityIcons name={'book-open-page-variant-outline'} size={32}></MaterialCommunityIcons>
+                <Text style={[styles.entryTitle, {flexGrow: 1, marginLeft: 10}]}>{entry.title}</Text>
 			          <Text style={styles.entryTitle}>{new Date(entry.date_of_entry).toLocaleDateString()}</Text>
               </View>
               <Text style={styles.entryText}>{entry.journal_entry}</Text>
             </TouchableOpacity>
+            
           ))
+          
         ) : (
           <Text style={styles.noEntriesText}>
             You haven't made any journal entries yet!
           </Text>
         )}
       </ScrollView>
+        <View style={styles.plus}>
+          <Ionicons name='md-add' size={32} color='black'/>
+        </View>
     </View>
   );
 }
@@ -209,7 +133,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   entryText: {
-    fontSize: 16,
+    fontSize: 18,
 	justifyContent: "space-between",
   },
   loadingText: {
@@ -225,6 +149,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
+  },
+  plus: {
+    backgroundColor: 'white',
+    borderWidth: 3,
+    borderRadius: 50,
+    width: 55,
+    height: 55,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 20,
+    right: 20
   }
 });
 

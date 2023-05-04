@@ -3,7 +3,7 @@ import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { SplashScreen } from 'expo-splash-screen';
+import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect } from "react";
 
 import HomeScreen from './screens/HomeScreen';
@@ -19,15 +19,23 @@ const Tab = createBottomTabNavigator();
 const App =() => {
   useEffect(() => {
     async function prepare() {
-      await SplashScreen.preventAutoHideAsync();
+      try {
+        await SplashScreen.preventAutoHideAsync();
+      } catch (e) {
+        console.warn(e);
+      }
     }
     prepare();
   }, []);
 
     // Wait for app to load and then hide the splash screen
     setTimeout(async () => {
-      await SplashScreen.hideAsync();
-    }, 3000000);
+      try {
+        await SplashScreen.hideAsync();
+      } catch (error) {
+        console.warn(error)
+      }
+    }, 3000);
 
     return (
         <NavigationContainer>
