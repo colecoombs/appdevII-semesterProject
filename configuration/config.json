@@ -4,7 +4,7 @@
     "password": "Letmein1!",
     "database": "weather",
     "secret": "supersecret",
-    "expTime": 3000000,
+    "expTime": 30000,
     "divideTime": 60,
     "journal_limit": 10
 }
