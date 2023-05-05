@@ -17,6 +17,7 @@
               added a loop to show the 10 journal entries in a touchable opacity
               scroll view
               added a useEffect to render the journal page each time it is clicked on
+  05/04/2023: added documentation and spacing to the code to make it more readable
 
  */
 
@@ -36,31 +37,43 @@ import {MaterialCommunityIcons} from '@expo/vector-icons/';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 function Journal() {
+  // Checks if the Journal screen is focused
   const isFocused = useIsFocused();
+
+  // Constant that holds the journal entries
+  // Use State allows it to be changed quickly
   const [journalEntries, setJournalEntries] = useState([]);
+
+  // Use state for the loading state
   const [loading, setLoading] = useState(false);
 
-  // Loads 
+  // Function used to load the journal entries from the database
   const loadJournalEntries = async () => {
     setLoading(true);
     const token = await SecureStore.getItemAsync("token");
     try {
       const response = await axios.get(
-        `http:/10.15.6.93:3000/api/data/load_data`,
+        `http:/192.168.1.29:3000/api/data/load_data`,
         {
           headers: {
             "x-auth": token,
           },
         }
       );
+
+      // Sets the journal entries as a constant
       setJournalEntries(response.data.result);
     } catch (error) {
       console.log(error);
+
+    // If no error then set loading state to false
     } finally {
       setLoading(false);
     }
   };
 
+  // Use Effect hook used to re-render the journal contents each time
+  // the journal page is clicked on
   useEffect(() => {
     const getTokenAndLoadEntries = async () => {
       const token = await SecureStore.getItemAsync("token");
@@ -109,6 +122,7 @@ function Journal() {
   );
 }
 
+// Different style sheets
 const styles = StyleSheet.create({
   container: {
     flex: 1,

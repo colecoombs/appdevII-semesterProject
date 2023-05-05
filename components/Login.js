@@ -27,7 +27,7 @@ const config = require("../configuration/config.json");
 
 export function Login(email, password) {
 	axios
-		.post("http:/10.15.6.93:3000/api/user/auth", {
+		.post("http:/192.168.1.29:3000/api/user/auth", {
 			email: email,
 			password: password,
 		})
