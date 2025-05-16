@@ -31,7 +31,7 @@ import GetCurrentWeather from "../components/Weather";
 // This function uses an axios call to fetch the current weather and calls on different
 // functions to display this information in their respective sections
 function HomeScreen() {
-	const apiKey = "d95207455d6fbc8aa3659b659f721c47";
+	const apiKey = "###############";
 	const [weather, setWeather] = useState({
 		reqDT: 1,
 		description: "",
