@@ -1,7 +1,7 @@
 {
     "host": "localhost",
     "user": "weatherdev",
-    "password": "Letmein1!",
+    "password": "######",
     "database": "weather",
     "secret": "supersecret",
     "expTime": 30000,
